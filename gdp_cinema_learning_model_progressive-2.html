@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GDP Cinema Shooting Guidebook Learning Model — Progressive Version</title>
+  <style>
+    :root{
+      --maroon:#7A0019;
+      --maroon-dark:#5a0012;
+      --gold:#FFCC33;
+      --gold-soft:#fff4cc;
+      --ink:#241b1d;
+      --bg:#f7f2ef;
+      --card:#ffffff;
+      --line:#eadfd7;
+      --success:#1f7a44;
+      --danger:#a63c3c;
+      --shadow:0 14px 30px rgba(122,0,25,.12);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top right, rgba(255,204,51,.18), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(122,0,25,.08), transparent 24%),
+        linear-gradient(180deg, #fbf8f6 0%, #f4efeb 100%);
+    }
+    .shell{max-width:1240px;margin:0 auto;padding:28px 20px 88px}
+    .hero{
+      background:linear-gradient(135deg,var(--maroon) 0%,var(--maroon-dark) 100%);
+      color:#fff;border-radius:30px;padding:34px;position:relative;overflow:hidden;box-shadow:var(--shadow)
+    }
+    .hero:after{
+      content:"";position:absolute;right:-90px;top:-90px;width:260px;height:260px;
+      background:radial-gradient(circle, rgba(255,204,51,.28), rgba(255,204,51,0) 72%);
+    }
+    .eyebrow{
+      display:inline-block;background:rgba(255,204,51,.15);color:var(--gold);
+      padding:8px 12px;border-radius:999px;border:1px solid rgba(255,204,51,.25);
+      font-size:.84rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase
+    }
+    h1{margin:14px 0 12px;font-size:clamp(2rem,4vw,3.25rem);line-height:1.03}
+    .hero p{max-width:780px;color:#f7ecef;font-size:1.03rem;line-height:1.65;margin:0 0 18px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+    button{border:none;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;transition:.2s ease}
+    button:hover{transform:translateY(-1px)}
+    .btn-primary{background:var(--gold);color:#3d2d00}
+    .btn-secondary{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.16)}
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
+    .stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px}
+    .stat .label{display:block;color:#f4d38b;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+    .stat strong{font-size:1.35rem}
+
+    .layout{display:grid;grid-template-columns:310px minmax(0,1fr);gap:22px;margin-top:24px}
+    .sidebar{
+      position:sticky;top:20px;align-self:start;background:rgba(255,255,255,.82);
+      backdrop-filter:blur(10px);border:1px solid rgba(122,0,25,.08);
+      border-radius:26px;padding:18px;box-shadow:var(--shadow)
+    }
+    .sidebar h3{margin:2px 0 14px;font-size:1.06rem}
+    .progress-wrap{background:#f2e8e2;border-radius:999px;height:12px;overflow:hidden;margin:10px 0 8px}
+    .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--gold),#ffd967);transition:width .35s ease}
+    .small{color:#6a5757;font-size:.92rem;line-height:1.5}
+    .meter{margin-top:14px;padding:14px;border-radius:18px;background:#fff8e6;border:1px solid #f0ddb0}
+    .meter strong{display:block;font-size:1.45rem;color:#6b4a00}
+    .meter span{font-size:.92rem;color:#745c20}
+    .toc{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+    .toc button{width:100%;text-align:left;background:#fff;border:1px solid var(--line);color:#3e2b2f}
+    .toc button.active{border-color:var(--maroon);box-shadow:inset 0 0 0 1px var(--maroon);background:#fff8eb}
+    .badges{margin-top:16px;display:grid;gap:10px}
+    .badge-card{padding:12px 14px;border-radius:16px;background:#fff;border:1px solid var(--line);opacity:.5}
+    .badge-card.unlocked{opacity:1;border-color:#e8c96a;background:#fff9e8}
+    .badge-card strong{display:block;margin-bottom:4px}
+
+    .content{display:flex;flex-direction:column;gap:18px}
+    .module{
+      background:var(--card);border:1px solid rgba(122,0,25,.08);border-radius:28px;padding:24px;box-shadow:var(--shadow)
+    }
+    .module.locked-module{display:none}
+    .module-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:14px}
+    .module-head h2{margin:0 0 8px;font-size:1.72rem}
+    .module-head p{margin:0;color:#5a4a4b;line-height:1.6}
+    .module-badge{white-space:nowrap;background:#fff7da;color:#6b4a00;border:1px solid #f2d57b;padding:10px 12px;border-radius:999px;font-size:.86rem;font-weight:800}
+    .quick-sheet{background:linear-gradient(180deg,#fffaf0,#fffdf9);border:1px solid #f0dfb6;border-radius:22px;padding:18px;margin-top:16px}
+    .quick-sheet h3{margin:0 0 12px;font-size:1.05rem;color:var(--maroon)}
+    .chips{display:flex;flex-wrap:wrap;gap:10px}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.92rem;font-weight:800;color:#3e2b2f}
+
+    .stepper{margin-top:18px;display:grid;gap:14px}
+    .step{
+      border:1px solid var(--line);border-radius:22px;background:#fffdfa;overflow:hidden
+    }
+    .step.locked{opacity:.55}
+    .step-header{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;cursor:pointer;background:#fff
+    }
+    .step-header-left{display:flex;gap:12px;align-items:flex-start}
+    .step-num{
+      min-width:34px;height:34px;border-radius:999px;background:#f7efe7;border:1px solid var(--line);display:grid;place-items:center;font-weight:900;color:var(--maroon)
+    }
+    .step.complete .step-num{background:#eef9f1;border-color:#bde2c8;color:var(--success)}
+    .step-title{font-weight:800}
+    .step-sub{font-size:.92rem;color:#6a5757;margin-top:3px}
+    .step-status{font-size:.86rem;font-weight:800;color:#6b4a00;background:#fff8e6;border:1px solid #f0ddb0;padding:8px 10px;border-radius:999px}
+    .step-content{display:none;padding:0 18px 18px}
+    .step.open .step-content{display:block}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:8px}
+    .tile{background:#fcfbfa;border:1px solid var(--line);border-radius:18px;padding:16px}
+    .tile h4{margin:0 0 8px;color:var(--maroon)}
+    .tile ul{margin:0;padding-left:18px;line-height:1.62}
+    .callout{margin-top:14px;padding:16px 18px;border-left:5px solid var(--gold);background:#fff7df;border-radius:16px;line-height:1.6}
+    .question{margin-top:14px;border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff}
+    .question h4{margin:0 0 6px;font-size:1rem}
+    .question .q-sub{margin:0 0 12px;color:#6b5a5b;font-size:.92rem}
+    .options{display:grid;gap:10px}
+    .option{width:100%;text-align:left;background:#fff;border:1px solid #d7cbc3;border-radius:14px;padding:12px 14px;font-weight:700;color:#35282a}
+    .option.correct{border-color:#52a56d;background:#effaf2}
+    .option.wrong{border-color:#d37a7a;background:#fff3f3}
+    .feedback{margin-top:12px;padding:12px 14px;border-radius:14px;font-weight:700;display:none}
+    .feedback.show{display:block}
+    .feedback.ok{background:#effaf2;color:var(--success);border:1px solid #bde2c8}
+    .feedback.no{background:#fff4f4;color:#8f2d2d;border:1px solid #ebc0c0}
+    .step-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .next-btn{background:var(--maroon);color:#fff}
+    .ghost-btn{background:#f5f0ec;color:#4d3a3f;border:1px solid var(--line)}
+    .scenario{margin-top:12px;padding:16px;border-radius:18px;background:linear-gradient(180deg,#fff8ea,#fffdf8);border:1px solid #efd9a2}
+    .scenario h4{margin:0 0 8px;color:var(--maroon)}
+    .checklist{display:grid;gap:10px;margin-top:10px}
+    .check-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:#fcfbfa;border:1px solid var(--line);border-radius:14px}
+    .check-item input{transform:scale(1.15);margin-top:3px;accent-color:var(--maroon)}
+    .footer-note{margin-top:16px;color:#6c5c5c;font-size:.92rem;line-height:1.6}
+    .module-controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .complete-module-btn{background:var(--gold);color:#3e2d01}
+    .reset-btn{background:#f5f0ec;color:#4d3a3f;border:1px solid var(--line)}
+
+    @media (max-width:1000px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{position:static}
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid{grid-template-columns:1fr}
+    }
+    @media (max-width:620px){
+      .hero{padding:24px}
+      .stats{grid-template-columns:1fr}
+      .module{padding:18px}
+      .module-head{flex-direction:column}
+      .step-header{align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <span class="eyebrow">Progressive training build</span>
+      <h1>GDP Cinema Shooting Guidebook</h1>
+      <p>
+        This version reveals each module as the learner moves through it. Instead of dumping everything on one page,
+        every module now works like a guided sequence. Module 6 is also rebuilt to be much more question-based so it feels
+        like real first-shift prep.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="scrollToModule('module1')">Start training</button>
+        <button class="btn-secondary" onclick="resetAll()">Reset progress</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><span class="label">Modules</span><strong>6</strong></div>
+        <div class="stat"><span class="label">Questions</span><strong>22</strong></div>
+        <div class="stat"><span class="label">Flow</span><strong>Progressive reveal</strong></div>
+        <div class="stat"><span class="label">Prep focus</span><strong>First shift ready</strong></div>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h3>Your progress</h3>
+        <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="small"><span id="progressText">0%</span> complete</div>
+        <div class="meter">
+          <strong><span id="xpText">0</span> XP</strong>
+          <span id="rankText">Rookie Shooter</span>
+        </div>
+
+        <div class="badges">
+          <div class="badge-card" id="badge-first"><strong>🎬 First Roll</strong><span>Answer your first question</span></div>
+          <div class="badge-card" id="badge-streak"><strong>🧠 Quiz Streak</strong><span>Get 6 answers correct</span></div>
+          <div class="badge-card" id="badge-half"><strong>🏟️ Game Ready</strong><span>Finish 3 modules</span></div>
+          <div class="badge-card" id="badge-all"><strong>👑 Cinema Captain</strong><span>Finish all 6 modules</span></div>
+        </div>
+
+        <div class="toc">
+          <button data-target="module1" class="active">1. Gear & camera basics</button>
+          <button data-target="module2">2. Setup & S-Log foundations</button>
+          <button data-target="module3">3. Sport-specific shooting specs</button>
+          <button data-target="module4">4. White balance & shutter</button>
+          <button data-target="module5">5. Checkout, upload & tagging</button>
+          <button data-target="module6">6. First shift prep lab</button>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="module" id="module1" data-module="1">
+          <div class="module-head">
+            <div>
+              <h2>1. Gear & camera basics</h2>
+              <p>Move through this module step by step. Each new section opens after the one before it, so it feels more like guided onboarding than a long page.</p>
+            </div>
+            <div class="module-badge">Guided flow</div>
+          </div>
+
+          <div class="quick-sheet">
+            <h3>Quick cheat sheet</h3>
+            <div class="chips">
+              <span class="chip">📷 Beginners: A7III / A7rIII first</span>
+              <span class="chip">⚠️ Ask staff before FX3 / FX6</span>
+              <span class="chip">🔁 24–70 = flexible</span>
+              <span class="chip">🏈 70–350 = far action</span>
+            </div>
+          </div>
+
+          <div class="stepper">
+            <div class="step open" data-step="m1s1">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">1</div>
+                  <div>
+                    <div class="step-title">Pick the right camera body</div>
+                    <div class="step-sub">Know the beginner starting point and the approval line.</div>
+                  </div>
+                </div>
+                <div class="step-status">Start here</div>
+              </div>
+              <div class="step-content">
+                <div class="grid">
+                  <div class="tile">
+                    <h4>Camera options</h4>
+                    <ul>
+                      <li>Sony FX3</li>
+                      <li>Sony A7III / A7rIII</li>
+                      <li>Sony A7SIII</li>
+                      <li>Sony FX6</li>
+                    </ul>
+                  </div>
+                  <div class="tile">
+                    <h4>Decision rule</h4>
+                    <ul>
+                      <li>As a beginner student, reach for an A7III / A7rIII first.</li>
+                      <li>You must ask a full-time staff member before using an FX3 or FX6.</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="question" data-answer="0">
+                  <h4>What should a beginner student normally use first?</h4>
+                  <p class="q-sub">Pick the safest default from the guide.</p>
+                  <div class="options">
+                    <button class="option">A7III / A7rIII</button>
+                    <button class="option">FX6 by default</button>
+                    <button class="option">Only the FX3</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m1s2">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">2</div>
+                  <div>
+                    <div class="step-title">Choose a lens for the venue</div>
+                    <div class="step-sub">Use distance and environment to guide the pick.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="grid">
+                  <div class="tile">
+                    <h4>Common lens roles</h4>
+                    <ul>
+                      <li><strong>24–70:</strong> versatile workhorse</li>
+                      <li><strong>24–105:</strong> extra reach for all-day coverage</li>
+                      <li><strong>70–200:</strong> isolate from farther back</li>
+                      <li><strong>70–350:</strong> best for field sports and very distant action</li>
+                    </ul>
+                  </div>
+                  <div class="tile">
+                    <h4>How to think about it</h4>
+                    <ul>
+                      <li>Ask what sport you are shooting.</li>
+                      <li>Think about how close you can get.</li>
+                      <li>Think about how much flexibility you need.</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="question" data-answer="2">
+                  <h4>Which lens is the best fit when you cannot get close to field action?</h4>
+                  <p class="q-sub">Distance matters most here.</p>
+                  <div class="options">
+                    <button class="option">24–70mm f/2.8</button>
+                    <button class="option">24–105mm f/4</button>
+                    <button class="option">70–350mm</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m1s3">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">3</div>
+                  <div>
+                    <div class="step-title">Quick scenario check</div>
+                    <div class="step-sub">Use the gear rules in a real-feeling situation.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="scenario">
+                  <h4>Scenario</h4>
+                  <p>You are covering football from a distance and are still a newer student shooter. What combo is the safest fit?</p>
+                </div>
+                <div class="question" data-answer="1">
+                  <h4>Pick the best answer.</h4>
+                  <div class="options">
+                    <button class="option">FX6 + 24–70</button>
+                    <button class="option">A7III / A7rIII + 70–350</button>
+                    <button class="option">FX3 + any lens without asking</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="completeModule('module1')">Finish module</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="module locked-module" id="module2" data-module="2">
+          <div class="module-head">
+            <div>
+              <h2>2. Setup & S-Log foundations</h2>
+              <p>This module opens in sequence so learners see setup decisions in the order they would actually make them at a venue.</p>
+            </div>
+            <div class="module-badge">Guided flow</div>
+          </div>
+
+          <div class="quick-sheet">
+            <h3>Quick cheat sheet</h3>
+            <div class="chips">
+              <span class="chip">🎞️ XAVC S 4K = standard 4K</span>
+              <span class="chip">💻 XAVC S HD = standard HD</span>
+              <span class="chip">🌈 S-Log3 = more dynamic range</span>
+              <span class="chip">☀️ Slightly overexpose, do not clip</span>
+              <span class="chip">⚙️ FX3 log mode: Flexible ISO</span>
+            </div>
+          </div>
+
+          <div class="stepper">
+            <div class="step open" data-step="m2s1">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">1</div>
+                  <div>
+                    <div class="step-title">Set recording format</div>
+                    <div class="step-sub">Start with footage quality before anything else.</div>
+                  </div>
+                </div>
+                <div class="step-status">Start here</div>
+              </div>
+              <div class="step-content">
+                <div class="grid">
+                  <div class="tile">
+                    <h4>Where to go</h4>
+                    <ul>
+                      <li>Menu → Shooting Menu → Image Quality / Media → Image Quality / Rec Format</li>
+                    </ul>
+                  </div>
+                  <div class="tile">
+                    <h4>Main options</h4>
+                    <ul>
+                      <li>XAVC S 4K = standard 4K option</li>
+                      <li>XAVC S HD = standard HD option</li>
+                      <li>Check sport-specific specs before deciding</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="question" data-answer="0">
+                  <h4>Which recording format is the standard 4K option?</h4>
+                  <div class="options">
+                    <button class="option">XAVC S 4K</button>
+                    <button class="option">XAVC S-I HD</button>
+                    <button class="option">Only RAW</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m2s2">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">2</div>
+                  <div>
+                    <div class="step-title">Turn on S-Log3 the right way</div>
+                    <div class="step-sub">Use the guide’s newer Sony workflow language.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="callout">
+                  S-Log3 keeps highlight and shadow detail for better grading later. On the FX3, the guide points learners toward <strong>Flexible ISO</strong> in Log Shooting settings.
+                </div>
+                <div class="question" data-answer="1">
+                  <h4>Why does the guide recommend S-Log3?</h4>
+                  <div class="options">
+                    <button class="option">It removes the need to color correct later</button>
+                    <button class="option">It keeps more dynamic range for grading</button>
+                    <button class="option">It automatically fixes exposure mistakes</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="question" data-answer="2">
+                  <h4>Which setup choice matches the guide?</h4>
+                  <div class="options">
+                    <button class="option">Auto white balance and dark exposure</button>
+                    <button class="option">Only use the highest ISO available</button>
+                    <button class="option">Flexible ISO, manual white balance, expose slightly brighter</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m2s3">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">3</div>
+                  <div>
+                    <div class="step-title">Exposure basics for cleaner footage</div>
+                    <div class="step-sub">Use the base ISO and exposure rules on purpose.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="grid">
+                  <div class="tile">
+                    <h4>S-Log basics</h4>
+                    <ul>
+                      <li>Low base ISO: 800</li>
+                      <li>High base ISO: 12,800</li>
+                      <li>Use manual white balance</li>
+                      <li>Avoid underexposure</li>
+                    </ul>
+                  </div>
+                  <div class="tile">
+                    <h4>Best practice</h4>
+                    <ul>
+                      <li>Expose slightly to the right by about +1 to +2</li>
+                      <li>Do not flash all the way into clipping</li>
+                      <li>Use ND filters outdoors if needed</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="question" data-answer="0">
+                  <h4>What is the low base ISO listed for S-Log3?</h4>
+                  <div class="options">
+                    <button class="option">800</button>
+                    <button class="option">400</button>
+                    <button class="option">3200</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="completeModule('module2')">Finish module</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="module locked-module" id="module3" data-module="3">
+          <div class="module-head">
+            <div>
+              <h2>3. Sport-specific shooting specs</h2>
+              <p>This module reveals one sport decision layer at a time so people do not get overwhelmed by every shooting spec at once.</p>
+            </div>
+            <div class="module-badge">Guided flow</div>
+          </div>
+
+          <div class="quick-sheet">
+            <h3>Quick cheat sheet</h3>
+            <div class="chips">
+              <span class="chip">🏈 Football action = usually 4K + S-Log3</span>
+              <span class="chip">🏀 Basketball / hockey action = 4K</span>
+              <span class="chip">🤝 Team + community events = often 1080p</span>
+              <span class="chip">🥇 Olympic sports = default 1080p</span>
+            </div>
+          </div>
+
+          <div class="stepper">
+            <div class="step open" data-step="m3s1">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">1</div>
+                  <div>
+                    <div class="step-title">Football rules</div>
+                    <div class="step-sub">Know the difference between game action and lower-scale event coverage.</div>
+                  </div>
+                </div>
+                <div class="step-status">Start here</div>
+              </div>
+              <div class="step-content">
+                <div class="grid">
+                  <div class="tile">
+                    <h4>Football action</h4>
+                    <ul>
+                      <li>4K and S-Log3</li>
+                      <li>FX3 / A7SIII with PP8</li>
+                      <li>Large-scale productions and major action fit here</li>
+                    </ul>
+                  </div>
+                  <div class="tile">
+                    <h4>Football community/team coverage</h4>
+                    <ul>
+                      <li>1080p can be used</li>
+                      <li>Fits fan shooters, team events, and community events</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="question" data-answer="0">
+                  <h4>For football game action, what does the guide most strongly point toward?</h4>
+                  <div class="options">
+                    <button class="option">4K with S-Log3</button>
+                    <button class="option">1080p only</button>
+                    <button class="option">No clear standard</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m3s2">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">2</div>
+                  <div>
+                    <div class="step-title">MBB / WBB / MHO rules</div>
+                    <div class="step-sub">Use event type to choose between 4K and 1080p.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="callout">
+                  For MBB, WBB, and MHO, game or action work points to 4K. Community events and team activities point more toward 1080p.
+                </div>
+                <div class="question" data-answer="2">
+                  <h4>Which event type is more likely to be shot in 1080p instead of 4K?</h4>
+                  <div class="options">
+                    <button class="option">Major basketball game action</button>
+                    <button class="option">Top football highlight coverage</button>
+                    <button class="option">Community or team activity content</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m3s3">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">3</div>
+                  <div>
+                    <div class="step-title">Olympic sports rules</div>
+                    <div class="step-sub">Use the default unless there is a strong exception.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="question" data-answer="1">
+                  <h4>What is the default for Olympic sports in the guide?</h4>
+                  <div class="options">
+                    <button class="option">Always 4K</button>
+                    <button class="option">Default to 1080p unless there is a high-level exception</button>
+                    <button class="option">Only shoot stills</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="completeModule('module3')">Finish module</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="module locked-module" id="module4" data-module="4">
+          <div class="module-head">
+            <div>
+              <h2>4. White balance & shutter</h2>
+              <p>This one is built like a clean technical walkthrough so learners make one setting decision at a time.</p>
+            </div>
+            <div class="module-badge">Guided flow</div>
+          </div>
+
+          <div class="quick-sheet">
+            <h3>Quick cheat sheet</h3>
+            <div class="chips">
+              <span class="chip">🌡️ Set Kelvin manually</span>
+              <span class="chip">💡 3200K = tungsten-ish</span>
+              <span class="chip">☀️ 5600K = daylight-ish</span>
+              <span class="chip">🎥 180° shutter = natural blur</span>
+              <span class="chip">🤝 Match Kelvin with your partner</span>
+            </div>
+          </div>
+
+          <div class="stepper">
+            <div class="step open" data-step="m4s1">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">1</div>
+                  <div>
+                    <div class="step-title">White balance basics</div>
+                    <div class="step-sub">Manual white balance first, not auto.</div>
+                  </div>
+                </div>
+                <div class="step-status">Start here</div>
+              </div>
+              <div class="step-content">
+                <div class="grid">
+                  <div class="tile">
+                    <h4>How to set it</h4>
+                    <ul>
+                      <li>Menu → Exposure/Color → White Balance</li>
+                      <li>Select C.Temp/Filter</li>
+                      <li>Adjust Kelvin manually</li>
+                    </ul>
+                  </div>
+                  <div class="tile">
+                    <h4>Reference values</h4>
+                    <ul>
+                      <li>3200K for tungsten-type light</li>
+                      <li>5600K for daylight-type light</li>
+                      <li>Match Kelvin with the other shooter if working together</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="question" data-answer="0">
+                  <h4>When shooting with another person, what should you match?</h4>
+                  <div class="options">
+                    <button class="option">The same Kelvin value</button>
+                    <button class="option">Different Kelvin values for variety</button>
+                    <button class="option">Only shutter speed</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m4s2">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">2</div>
+                  <div>
+                    <div class="step-title">Shutter angle basics</div>
+                    <div class="step-sub">Use 180° when you want natural-looking motion.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="callout">
+                  On the FX3 and A7SIII, shutter angle helps keep motion blur consistent when frame rate changes. 180° is the common default.
+                </div>
+                <div class="question" data-answer="2">
+                  <h4>Why use shutter angle instead of only shutter speed?</h4>
+                  <div class="options">
+                    <button class="option">It makes footage brighter every time</button>
+                    <button class="option">It replaces the need to know frame rate</button>
+                    <button class="option">It keeps motion blur more consistent as frame rate changes</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="question" data-answer="1">
+                  <h4>Which number matches the common natural-motion default?</h4>
+                  <div class="options">
+                    <button class="option">90°</button>
+                    <button class="option">180°</button>
+                    <button class="option">360°</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="completeModule('module4')">Finish module</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="module locked-module" id="module5" data-module="5">
+          <div class="module-head">
+            <div>
+              <h2>5. Checkout, upload & tagging</h2>
+              <p>This module now walks learners from the office to the server in the same order they would experience the workflow on shift.</p>
+            </div>
+            <div class="module-badge">Guided flow</div>
+          </div>
+
+          <div class="quick-sheet">
+            <h3>Quick cheat sheet</h3>
+            <div class="chips">
+              <span class="chip">🔋 Bring two batteries</span>
+              <span class="chip">💾 Confirm an SD card</span>
+              <span class="chip">📸 Post gear photo for OUT and IN</span>
+              <span class="chip">🏠 Dump after home games ASAP</span>
+              <span class="chip">🟥 Best clips = red tag only</span>
+            </div>
+          </div>
+
+          <div class="stepper">
+            <div class="step open" data-step="m5s1">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">1</div>
+                  <div>
+                    <div class="step-title">Check out your gear</div>
+                    <div class="step-sub">Do not leave the office without the essentials.</div>
+                  </div>
+                </div>
+                <div class="step-status">Start here</div>
+              </div>
+              <div class="step-content">
+                <div class="grid">
+                  <div class="tile">
+                    <h4>Before leaving</h4>
+                    <ul>
+                      <li>Grab batteries, usually two</li>
+                      <li>Make sure you have an SD card</li>
+                      <li>Take a photo of all gear in the G-Chat</li>
+                    </ul>
+                  </div>
+                  <div class="tile">
+                    <h4>Labeling</h4>
+                    <ul>
+                      <li>Title it “Sport you are shooting OUT”</li>
+                      <li>Bring all gear and lens caps back later</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="question" data-answer="2">
+                  <h4>Which item list best matches checkout expectations?</h4>
+                  <div class="options">
+                    <button class="option">Camera only</button>
+                    <button class="option">Camera and one random battery if available</button>
+                    <button class="option">Gear photo, batteries, and SD card</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m5s2">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">2</div>
+                  <div>
+                    <div class="step-title">Upload timing</div>
+                    <div class="step-sub">Know when footage needs to be on the server.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="callout">
+                  Home game footage should be dumped immediately after the game. Road trip footage should be uploaded as soon as possible once back, ideally by the next day at 11am if not uploaded on the road.
+                </div>
+                <div class="question" data-answer="0">
+                  <h4>When should home game footage be dumped?</h4>
+                  <div class="options">
+                    <button class="option">Immediately after the game</button>
+                    <button class="option">Whenever there is time next week</button>
+                    <button class="option">Only if someone asks for it</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m5s3">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">3</div>
+                  <div>
+                    <div class="step-title">Tagging rules</div>
+                    <div class="step-sub">Use the right color and keep names clean.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="question" data-answer="1">
+                  <h4>What color should be used for the best clips?</h4>
+                  <div class="options">
+                    <button class="option">Blue</button>
+                    <button class="option">Red</button>
+                    <button class="option">Any color you want</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="question" data-answer="2">
+                  <h4>Which folder naming choice follows the guide?</h4>
+                  <div class="options">
+                    <button class="option">Use slashes and apostrophes to make it specific</button>
+                    <button class="option">Use symbols so folders stand out more</button>
+                    <button class="option">Avoid special characters so EditShare does not glitch</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="completeModule('module5')">Finish module</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="module locked-module" id="module6" data-module="6">
+          <div class="module-head">
+            <div>
+              <h2>6. First shift prep lab</h2>
+              <p>This module is much more question-based and is built to feel like last-minute prep before someone works their first shift.</p>
+            </div>
+            <div class="module-badge">Prep lab</div>
+          </div>
+
+          <div class="quick-sheet">
+            <h3>First-shift cheat sheet</h3>
+            <div class="chips">
+              <span class="chip">✅ Beginner body first</span>
+              <span class="chip">✅ Match lens to distance</span>
+              <span class="chip">✅ Batteries + SD card</span>
+              <span class="chip">✅ Right file format for the sport</span>
+              <span class="chip">✅ Manual WB + safe exposure</span>
+              <span class="chip">✅ Upload and tag correctly after</span>
+            </div>
+          </div>
+
+          <div class="stepper">
+            <div class="step open" data-step="m6s1">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">1</div>
+                  <div>
+                    <div class="step-title">Before you leave the office</div>
+                    <div class="step-sub">These questions check if you would be ready to walk out the door.</div>
+                  </div>
+                </div>
+                <div class="step-status">Start here</div>
+              </div>
+              <div class="step-content">
+                <div class="question" data-answer="1">
+                  <h4>You are a brand-new shooter and see an FX3 open on the shelf. What should you do first?</h4>
+                  <div class="options">
+                    <button class="option">Take it because newer gear is always better</button>
+                    <button class="option">Ask a full-time staff member before using it</button>
+                    <button class="option">Ignore body choice and only focus on lenses</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="question" data-answer="2">
+                  <h4>You are heading to a football shoot and expect to be far from the action. What lens choice makes the most sense?</h4>
+                  <div class="options">
+                    <button class="option">24–70 only</button>
+                    <button class="option">24–105 because it is lighter</button>
+                    <button class="option">70–350 because distance is the main issue</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="question" data-answer="0">
+                  <h4>Which list matches a strong pre-departure check?</h4>
+                  <div class="options">
+                    <button class="option">Body, lenses, batteries, SD card, gear photo</button>
+                    <button class="option">Body and lens only</button>
+                    <button class="option">Only what you can remember without checking</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m6s2">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">2</div>
+                  <div>
+                    <div class="step-title">When you arrive at the venue</div>
+                    <div class="step-sub">These questions simulate the first few technical choices.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="question" data-answer="1">
+                  <h4>You turn the camera on and realize the last person used very different settings. What should you check first?</h4>
+                  <div class="options">
+                    <button class="option">Only the battery percentage</button>
+                    <button class="option">Your recording format and shooting setup</button>
+                    <button class="option">Nothing — just start recording</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="question" data-answer="2">
+                  <h4>If you are using S-Log3, which practice is the better choice?</h4>
+                  <div class="options">
+                    <button class="option">Underexpose and brighten later</button>
+                    <button class="option">Stay on auto white balance for speed</button>
+                    <button class="option">Expose slightly brighter without clipping and set white balance manually</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="question" data-answer="0">
+                  <h4>You are shooting with another person. What should match between both cameras?</h4>
+                  <div class="options">
+                    <button class="option">Kelvin value</button>
+                    <button class="option">Only lens brand</button>
+                    <button class="option">Nothing — matching is optional</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="question" data-answer="1">
+                  <h4>On an FX3 or A7SIII, what is the most common shutter angle for natural motion?</h4>
+                  <div class="options">
+                    <button class="option">90°</button>
+                    <button class="option">180°</button>
+                    <button class="option">360°</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="step-actions">
+                  <button class="next-btn" onclick="unlockNextStep(this)">Next section</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="step locked" data-step="m6s3">
+              <div class="step-header" onclick="toggleStep(this)">
+                <div class="step-header-left">
+                  <div class="step-num">3</div>
+                  <div>
+                    <div class="step-title">After the shoot</div>
+                    <div class="step-sub">Make sure the workflow is still correct after the event ends.</div>
+                  </div>
+                </div>
+                <div class="step-status">Locked</div>
+              </div>
+              <div class="step-content">
+                <div class="question" data-answer="0">
+                  <h4>After a home game, when should footage be dumped?</h4>
+                  <div class="options">
+                    <button class="option">Immediately after the game</button>
+                    <button class="option">At some point later in the week</button>
+                    <button class="option">Only if Minnesota won</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="question" data-answer="1">
+                  <h4>What color should the best clips receive when tagging?</h4>
+                  <div class="options">
+                    <button class="option">Blue</button>
+                    <button class="option">Red</button>
+                    <button class="option">Green</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+                <div class="question" data-answer="2">
+                  <h4>Why should you avoid special characters in folder names?</h4>
+                  <div class="options">
+                    <button class="option">They look unprofessional on screen</button>
+                    <button class="option">The coach might not like them</button>
+                    <button class="option">They can cause EditShare to glitch on the SMB mounting system</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+
+                <div class="scenario">
+                  <h4>Final first-shift scenario</h4>
+                  <p>You are about to leave the venue. You still have a lens cap missing, have not checked the gear back in, and plan to upload “later when you get to it.” Based on the guide, what should you do?</p>
+                </div>
+                <div class="question" data-answer="1">
+                  <h4>Choose the best response.</h4>
+                  <div class="options">
+                    <button class="option">Leave now and sort it out another day</button>
+                    <button class="option">Bring all gear and caps back, check it in properly, and follow upload timing expectations</button>
+                    <button class="option">Only worry about the footage, not the gear</button>
+                  </div>
+                  <div class="feedback"></div>
+                </div>
+
+                <div class="checklist" id="checklist">
+                  <label class="check-item"><input type="checkbox" /> <span>I know which beginner body I should reach for first.</span></label>
+                  <label class="check-item"><input type="checkbox" /> <span>I can pick a lens based on distance and venue.</span></label>
+                  <label class="check-item"><input type="checkbox" /> <span>I know what to pack before leaving.</span></label>
+                  <label class="check-item"><input type="checkbox" /> <span>I know how to reset format, white balance, and exposure at the venue.</span></label>
+                  <label class="check-item"><input type="checkbox" /> <span>I know the upload and tagging rules after the shoot.</span></label>
+                </div>
+
+                <div class="step-actions">
+                  <button class="next-btn" onclick="completeModule('module6')">Finish module</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-note">
+            This module is intentionally heavier on decision questions so new student workers can use it right before their first shift as a confidence check.
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const moduleIds = ["module1","module2","module3","module4","module5","module6"];
+    const tocButtons = document.querySelectorAll(".toc button");
+    const QUESTION_XP = 10;
+    const MODULE_XP = 30;
+
+    function defaultState(){
+      return {completed:[], quiz:{}, openSteps:{}, unlockedSteps:{}, checklist:{}};
+    }
+
+    function getState(){
+      return JSON.parse(localStorage.getItem("gdp-learning-progress-v3") || JSON.stringify(defaultState()));
+    }
+
+    function setState(state){
+      localStorage.setItem("gdp-learning-progress-v3", JSON.stringify(state));
+      renderState();
+    }
+
+    function rankLabel(points){
+      if(points >= 240) return "Cinema Captain";
+      if(points >= 170) return "Lead Shooter";
+      if(points >= 100) return "Game-Day Creator";
+      if(points >= 50) return "Developing Shooter";
+      return "Rookie Shooter";
+    }
+
+    function calcPoints(state){
+      let points = 0;
+      let correct = 0;
+      let answered = 0;
+      document.querySelectorAll(".question").forEach((q, i) => {
+        const saved = state.quiz[i];
+        if(saved !== undefined){
+          answered += 1;
+          if(String(saved) === String(q.dataset.answer)){
+            correct += 1;
+            points += QUESTION_XP;
+          }
+        }
+      });
+      points += state.completed.length * MODULE_XP;
+      return {points, correct, answered};
+    }
+
+    function setActiveTOC(id){
+      tocButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.target === id));
+    }
+
+    function scrollToModule(id){
+      document.getElementById(id).scrollIntoView({behavior:"smooth", block:"start"});
+      setActiveTOC(id);
+    }
+
+    function toggleStep(headerEl){
+      const step = headerEl.closest(".step");
+      if(step.classList.contains("locked")) return;
+      step.classList.toggle("open");
+      const state = getState();
+      state.openSteps[step.dataset.step] = step.classList.contains("open");
+      setState(state);
+    }
+
+    function unlockNextStep(buttonEl){
+      const current = buttonEl.closest(".step");
+      current.classList.add("complete");
+      const next = current.nextElementSibling;
+      const state = getState();
+      state.unlockedSteps[current.dataset.step] = true;
+      if(next && next.classList.contains("step")){
+        next.classList.remove("locked");
+        next.classList.add("open");
+        state.unlockedSteps[next.dataset.step] = true;
+        state.openSteps[next.dataset.step] = true;
+        next.querySelector(".step-status").textContent = "Unlocked";
+        next.scrollIntoView({behavior:"smooth", block:"center"});
+      }
+      setState(state);
+    }
+
+    function completeModule(moduleId){
+      const state = getState();
+      if(!state.completed.includes(moduleId)) state.completed.push(moduleId);
+
+      const module = document.getElementById(moduleId);
+      module.querySelectorAll(".step").forEach(step => step.classList.add("complete"));
+
+      const currentIndex = moduleIds.indexOf(moduleId);
+      const nextModuleId = moduleIds[currentIndex + 1];
+      if(nextModuleId){
+        const nextModule = document.getElementById(nextModuleId);
+        nextModule.classList.remove("locked-module");
+        nextModule.scrollIntoView({behavior:"smooth", block:"start"});
+      }
+
+      setState(state);
+    }
+
+    function updateBadges(metrics, state){
+      document.getElementById("badge-first").classList.toggle("unlocked", metrics.answered >= 1);
+      document.getElementById("badge-streak").classList.toggle("unlocked", metrics.correct >= 6);
+      document.getElementById("badge-half").classList.toggle("unlocked", state.completed.length >= 3);
+      document.getElementById("badge-all").classList.toggle("unlocked", state.completed.length >= 6);
+    }
+
+    function renderSteps(state){
+      document.querySelectorAll(".step").forEach((step, idx) => {
+        const key = step.dataset.step;
+        const isFirstInModule = idx === 0 || step.previousElementSibling === null || !step.previousElementSibling.classList.contains("step");
+        if(isFirstInModule && !state.unlockedSteps[key]){
+          step.classList.remove("locked");
+        }
+        if(state.unlockedSteps[key]) step.classList.remove("locked");
+        step.classList.toggle("open", !!state.openSteps[key] || step.classList.contains("open"));
+        const status = step.querySelector(".step-status");
+        if(step.classList.contains("locked")) status.textContent = "Locked";
+        else if(step.classList.contains("complete")) status.textContent = "Complete";
+        else if(step.classList.contains("open")) status.textContent = "Open";
+        else status.textContent = "Unlocked";
+      });
+    }
+
+    function renderState(){
+      const state = getState();
+      const metrics = calcPoints(state);
+      const pct = Math.round((state.completed.length / moduleIds.length) * 100);
+      document.getElementById("progressBar").style.width = pct + "%";
+      document.getElementById("progressText").textContent = pct + "%";
+      document.getElementById("xpText").textContent = metrics.points;
+      document.getElementById("rankText").textContent = rankLabel(metrics.points);
+
+      moduleIds.forEach((id, index) => {
+        const card = document.getElementById(id);
+        const shouldShow = index === 0 || state.completed.includes(moduleIds[index - 1]);
+        card.classList.toggle("locked-module", !shouldShow);
+        card.style.outline = state.completed.includes(id) ? "2px solid rgba(255,204,51,.55)" : "none";
+      });
+
+      document.querySelectorAll(".question").forEach((q, qi) => {
+        const saved = state.quiz[qi];
+        const feedback = q.querySelector(".feedback");
+        const options = q.querySelectorAll(".option");
+        options.forEach((opt, idx) => {
+          opt.classList.remove("correct","wrong");
+          if(saved !== undefined){
+            if(idx == q.dataset.answer) opt.classList.add("correct");
+            if(idx === saved && saved != q.dataset.answer) opt.classList.add("wrong");
+          }
+        });
+        if(saved !== undefined){
+          const ok = String(saved) === String(q.dataset.answer);
+          feedback.className = "feedback show " + (ok ? "ok" : "no");
+          feedback.textContent = ok ? "Correct. +10 XP" : "Not quite. Review the section and try again.";
+        } else {
+          feedback.className = "feedback";
+          feedback.textContent = "";
+        }
+      });
+
+      document.querySelectorAll("#checklist input").forEach((cb, i) => {
+        cb.checked = !!state.checklist[i];
+      });
+
+      updateBadges(metrics, state);
+      renderSteps(state);
+
+      const visibleModuleIds = moduleIds.filter((id, index) => index === 0 || state.completed.includes(moduleIds[index - 1]));
+      tocButtons.forEach((btn) => {
+        btn.style.display = visibleModuleIds.includes(btn.dataset.target) ? "block" : "none";
+      });
+    }
+
+    function resetAll(){
+      localStorage.removeItem("gdp-learning-progress-v3");
+      document.querySelectorAll(".step").forEach((step, idx) => {
+        step.classList.remove("complete","open");
+        if(step.previousElementSibling && step.previousElementSibling.classList.contains("step")) {
+          step.classList.add("locked");
+        } else {
+          step.classList.remove("locked");
+          step.classList.add("open");
+        }
+      });
+      moduleIds.forEach((id, index) => {
+        const module = document.getElementById(id);
+        module.classList.toggle("locked-module", index !== 0);
+      });
+      renderState();
+    }
+
+    document.querySelectorAll(".question").forEach((q, qi) => {
+      q.querySelectorAll(".option").forEach((opt, idx) => {
+        opt.addEventListener("click", () => {
+          const state = getState();
+          state.quiz[qi] = idx;
+          setState(state);
+        });
+      });
+    });
+
+    document.querySelectorAll("#checklist input").forEach((cb, i) => {
+      cb.addEventListener("change", () => {
+        const state = getState();
+        state.checklist[i] = cb.checked;
+        setState(state);
+      });
+    });
+
+    tocButtons.forEach(btn => btn.addEventListener("click", () => scrollToModule(btn.dataset.target)));
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if(visible) setActiveTOC(visible.target.id);
+    }, {rootMargin:"-25% 0px -55% 0px", threshold:[0.25,0.5,0.75]});
+    document.querySelectorAll(".module").forEach(m => observer.observe(m));
+
+    renderState();
+  </script>
+</body>
+</html>
